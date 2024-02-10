@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>Clock_PIC32_Dec12</name>
+            <name>Dashlight</name>
             <creation-uuid>2f3ce99f-0477-4d26-b4bf-e10014256537</creation-uuid>
             <make-project-type>0</make-project-type>
             <sourceEncoding>ISO-8859-1</sourceEncoding>

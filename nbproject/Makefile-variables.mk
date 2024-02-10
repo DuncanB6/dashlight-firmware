@@ -6,5 +6,5 @@
 CND_BASEDIR=`pwd`
 # default configuration
 CND_ARTIFACT_DIR_default=dist/default/production
-CND_ARTIFACT_NAME_default=Clock_PIC32_Dec12.X.production.hex
-CND_ARTIFACT_PATH_default=dist/default/production/Clock_PIC32_Dec12.X.production.hex
+CND_ARTIFACT_NAME_default=Dashlight.production.hex
+CND_ARTIFACT_PATH_default=dist/default/production/Dashlight.production.hex

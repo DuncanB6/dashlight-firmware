@@ -1,4 +1,10 @@
 
+/*
+ * Duncan Boyd, Feb 10, 2024, duncan@wapta.ca
+ * Purpose: Run a uc that can show some interesting metrics in my car through a
+ * 7 segment display.
+ */
+
 #include "CONFIG.h"
 #include <sys/attribs.h>
 

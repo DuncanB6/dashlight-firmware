@@ -24,7 +24,7 @@ CLEAN_SUBPROJECTS=${CLEAN_SUBPROJECTS_${SUBPROJECTS}}
 
 
 # Project Name
-PROJECTNAME=Clock_PIC32_Dec12.X
+PROJECTNAME=Dashlight
 
 # Active Configuration
 DEFAULTCONF=default
