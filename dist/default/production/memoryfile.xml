@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/default/debug/Clock_PIC32_Dec12.X.debug.elf">                 
+  <executable name="dist/default/production/Clock_PIC32_Dec12.X.production.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
       <length>66704</length>                 
-      <used>3564</used>                     
-      <free>63140</free>                     
+      <used>3772</used>                     
+      <free>62932</free>                     
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
-      <length>16896</length>                 
-      <used>2056</used>                     
-      <free>14840</free>                     
+      <length>16384</length>                 
+      <used>8</used>                     
+      <free>16376</free>                     
     </memory>                              
   </executable>                            
 </project>                                 

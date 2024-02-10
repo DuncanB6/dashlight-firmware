@@ -1,5 +1,4 @@
 
-
 #include "CONFIG.h"
 #include <sys/attribs.h>
 
@@ -165,19 +164,45 @@ void setup() {
     IEC0bits.CTIE = 1; // Interrupt enable
     __builtin_enable_interrupts(); // Enables interrupts
     _CP0_SET_COUNT(0); // Sets core timer to 0
+    
+    // Turn on the oscillator for RTCC
+    OSCCONbits.SOSCEN = 1;
+    while(!OSCCONbits.SOSCRDY);
+    
+    // Allow the RTCC values to be writable
+    SYSKEY = 0x0;
+    SYSKEY = 0xaa996655;
+    SYSKEY = 0x556699aa;
+    RTCCONbits.RTCWREN = 1;
+    
+    // Write a time and date of 0 to the RTCC, turn it on
+    RTCCONbits.ON = 0;
+    uint32_t time = 0;
+    RTCTIME = time;
+    RTCDATE = time;
+    RTCCONbits.ON = 1;
+    
+    
+    
+    
 }
 
 int main() {
     
-    setup(); // Initializes pins, interrupts
+    setup(); // Initializes pins, interrupts, RTCC
     
     init_sevenseg(); // Flashes numbers on 7 seg
     
     int randum = 0;
+    uint32_t time;
+    uint8_t seconds;
     while(1) {
-        randum = randum + 13;
-        delay(3000000);
-        if (!update_digs(randum)) {
+        // 00000000 00000000 00000000 00000000
+        // hour     minute   second   unused
+        time = RTCTIME;
+        seconds = (time >> 8) & 0b00001111;
+        randum = randum + 10;
+        if (!update_digs(seconds)) {
             init_sevenseg();
         }
         
