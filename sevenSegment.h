@@ -1,41 +1,22 @@
 
+#ifndef _sevenSegment_H_
+#define _sevenSegment_H_
 
-#ifndef RTCC_H__
-#define RTCC_H__
+extern void write_dig(int dig, int center);
+extern int update_digs(int number);
+extern void init_sevenseg();
+//extern void __ISR(_CORE_TIMER_VECTOR, IPL6SOFT) CoreTimerISR(void);
 
-#include "xc.h"
-#include "p32xxxx.h"
-#include <stdio.h>
+// For 7 seg interrupt
+//extern char digs[] = {7, 8, 3, 2}; // Digits to be written to 7 seg
+//extern int digit_index = 0; // Index for 7 seg digit, cycles through digits
 
-#pragma config JTAGEN = OFF
-#pragma config FWDTEN   = OFF    // Turn off watchdog timer
-#pragma config FNOSC    = FRCPLL // Select 8 MHz internal Fast RC (FRC) oscillator with PLL
-#pragma config FPLLIDIV = DIV_2  // Divide PLL input (FRC) to get into required range [4 MHz, 5 MHz]
-#pragma config FPLLMUL  = MUL_15 // PLL Multiplier
-#pragma config FPLLODIV = DIV_1  // PLL Output Divider
-#pragma config FPBDIV   = DIV_1  // Peripheral Clock divisor
-#pragma config FSOSCEN = ON      // Turn on secondary oscillator
+#define CORE_TICKS 100000 // determines how often the 7 seg displays
+#define _CORE_TIMER_VECTOR 0
 
-// Operating at 8 / 2 * 15 / 1 = 60 MHz
-
-typedef struct {
-    unsigned char sec01;
-    unsigned char sec10;
-    unsigned char min01;
-    unsigned char min10;
-    unsigned char hr01;
-    unsigned char hr10;
-    
-    unsigned char yr01;
-    unsigned char yr10;
-    unsigned char mn01;
-    unsigned char mn10;
-    unsigned char dy01;
-    unsigned char dy10;
-    unsigned char wk;
-} rtccTime;
-
-rtccTime readRTCC();
-
+// For 7 seg interrupt
+extern char digs[]; // Digits to be written to 7 seg
+extern int digit_index; // Index for 7 seg digit, cycles through digits
 
 #endif
+

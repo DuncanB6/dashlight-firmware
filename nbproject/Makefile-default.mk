@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=clock.c
+SOURCEFILES_QUOTED_IF_SPACED=sevenSegment.c rtcc.c main.c init_timers.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/clock.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/clock.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/sevenSegment.o ${OBJECTDIR}/rtcc.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init_timers.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/sevenSegment.o.d ${OBJECTDIR}/rtcc.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/init_timers.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/clock.o
+OBJECTFILES=${OBJECTDIR}/sevenSegment.o ${OBJECTDIR}/rtcc.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init_timers.o
 
 # Source Files
-SOURCEFILES=clock.c
+SOURCEFILES=sevenSegment.c rtcc.c main.c init_timers.c
 
 
 
@@ -101,18 +101,54 @@ endif
 # ------------------------------------------------------------------------------------
 # Rules for buildStep: compile
 ifeq ($(TYPE_IMAGE), DEBUG_RUN)
-${OBJECTDIR}/clock.o: clock.c  .generated_files/flags/default/e3213452fdf77b0530214c4ff275ae578b10af7b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/sevenSegment.o: sevenSegment.c  .generated_files/flags/default/95b124dea8226a4966e445fd304b6378efd0fca2 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/clock.o.d 
-	@${RM} ${OBJECTDIR}/clock.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/clock.o.d" -o ${OBJECTDIR}/clock.o clock.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	@${RM} ${OBJECTDIR}/sevenSegment.o.d 
+	@${RM} ${OBJECTDIR}/sevenSegment.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/sevenSegment.o.d" -o ${OBJECTDIR}/sevenSegment.o sevenSegment.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/rtcc.o: rtcc.c  .generated_files/flags/default/ddcbf8e5496e01e8d222e7b07cdb34183407a3c3 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/rtcc.o.d 
+	@${RM} ${OBJECTDIR}/rtcc.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/rtcc.o.d" -o ${OBJECTDIR}/rtcc.o rtcc.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/main.o: main.c  .generated_files/flags/default/b67c22ae6c8c9052ec41ac4049f828fdb3b2a10f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main.o.d 
+	@${RM} ${OBJECTDIR}/main.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/init_timers.o: init_timers.c  .generated_files/flags/default/59f1aa9b0d3343e2a9b9caa82a916cd6179dea02 .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/init_timers.o.d 
+	@${RM} ${OBJECTDIR}/init_timers.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/init_timers.o.d" -o ${OBJECTDIR}/init_timers.o init_timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 else
-${OBJECTDIR}/clock.o: clock.c  .generated_files/flags/default/d466a1bf52575cb6e0d808537ae7559731cd2a5a .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+${OBJECTDIR}/sevenSegment.o: sevenSegment.c  .generated_files/flags/default/58da1f2aeb526e6cfb4bd7c69774345a9c1dab9b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
-	@${RM} ${OBJECTDIR}/clock.o.d 
-	@${RM} ${OBJECTDIR}/clock.o 
-	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/clock.o.d" -o ${OBJECTDIR}/clock.o clock.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	@${RM} ${OBJECTDIR}/sevenSegment.o.d 
+	@${RM} ${OBJECTDIR}/sevenSegment.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/sevenSegment.o.d" -o ${OBJECTDIR}/sevenSegment.o sevenSegment.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/rtcc.o: rtcc.c  .generated_files/flags/default/498940816b55f16cc64cd88d9fc3a5bd4618ebaa .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/rtcc.o.d 
+	@${RM} ${OBJECTDIR}/rtcc.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/rtcc.o.d" -o ${OBJECTDIR}/rtcc.o rtcc.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/main.o: main.c  .generated_files/flags/default/a8ef95efba0c7e9325c683e5187f9d1117b3139f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/main.o.d 
+	@${RM} ${OBJECTDIR}/main.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/main.o.d" -o ${OBJECTDIR}/main.o main.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/init_timers.o: init_timers.c  .generated_files/flags/default/b4d3c333aee8b0d620c2cc40a2d82ded690695ee .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/init_timers.o.d 
+	@${RM} ${OBJECTDIR}/init_timers.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/init_timers.o.d" -o ${OBJECTDIR}/init_timers.o init_timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 endif
 
