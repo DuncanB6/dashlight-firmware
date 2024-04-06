@@ -71,14 +71,25 @@ int main() {
     
     init_sevenseg(); // Flashes numbers on 7 seg
     
-    uint32_t time;
-    uint8_t seconds;
+    struct rtccTime time;
+    uint16_t formatted_time;
+    int status = 0;
     while(1) {
-        time = RTCTIME;
-        seconds = (time >> 8) & 0b00001111;
-        if (!update_digs(seconds)) {
-            init_sevenseg();
+        
+        switch (status) {
+            case 0: // time since start
+                time = read_rtcc();
+                if (time.hr01 != 0) {
+                    formatted_time = time.hr10*1000 + time.hr01*100 + time.min10*10 + time.min01;
+                }
+                else {
+                    formatted_time = time.min10*1000 + time.min01*100 + time.sec10*10 + time.sec01;
+                }
+                if (!update_digs(formatted_time)) {
+                    init_sevenseg();
+                }
         }
+     
     }
     
     return 0;
