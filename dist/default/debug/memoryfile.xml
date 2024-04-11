@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/default/production/Dashlight.production.elf">                 
+  <executable name="dist/default/debug/Dashlight.debug.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
       <length>66704</length>                 
-      <used>8568</used>                     
-      <free>58136</free>                     
+      <used>8344</used>                     
+      <free>58360</free>                     
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
-      <length>16384</length>                 
-      <used>12</used>                     
-      <free>16372</free>                     
+      <length>16896</length>                 
+      <used>2060</used>                     
+      <free>14836</free>                     
     </memory>                              
   </executable>                            
 </project>                                 

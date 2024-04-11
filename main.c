@@ -61,6 +61,37 @@ void __ISR(_CORE_TIMER_VECTOR, IPL6SOFT) CoreTimerISR(void) {
     _CP0_SET_COMPARE(CORE_TICKS); // Watches core count until next interrupt
 }
 
+void write_uart(char * string) {
+    while (*string != '\0') {
+            while (U1STAbits.UTXBF) {
+                ;
+            }
+            U1TXREG = *string;
+            ++string;
+        }
+}
+
+void read_uart(char * message, int maxLength) {
+    char data = 0;
+    int complete = 0, num_bytes = 0;
+    while (!complete) {
+        if (U1STAbits.URXDA) {
+            data = U1RXREG;
+            if ((data == '\n') || (data == '\r')) {
+                complete = 1;
+            }
+            else {
+                message[num_bytes] = data;
+                ++num_bytes;
+                if (num_bytes >= maxLength) {
+                    num_bytes = 0;
+                }
+            }
+        }
+    }
+    message[num_bytes] = '\0';
+}
+
 int main() {
     
     PINSetup(); // Initializes pins, interrupts, RTCC
@@ -71,10 +102,35 @@ int main() {
     
     init_sevenseg(); // Flashes numbers on 7 seg
     
+    RPB3Rbits.RPB3R = 0b0001;
+    //U1RXRbits.U1RXR = 0b0100;
+    U1MODEbits.BRGH = 0;
+    U1BRG = ((30000000 / 9600) / 8) - 1;
+    //U1BRG = (48000000 / (16 * 9600)) - 1;
+    U1MODEbits.PDSEL = 0b00;
+    U1MODEbits.STSEL = 0;
+    U1STAbits.UTXEN = 1;
+    //U1STAbits.URXEN = 1;
+    U1MODEbits.ON = 1;
+   
+    
     struct rtccTime time;
     uint16_t formatted_time;
     int status = 0;
+    char message[100];
+    int i = 0;
+    int j = 0;
     while(1) {
+        
+        sprintf(message, "test");
+        write_uart(message);
+        //read_uart(message, 100);
+        i++;
+        
+        j = 0;
+        while (j < 3000000) {
+            j++;
+        }
         
         switch (status) {
             case 0: // time since start
