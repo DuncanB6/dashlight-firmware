@@ -74,6 +74,7 @@ void write_uart(char * string) {
 void read_uart(char * message, int maxLength) {
     char data = 0;
     int complete = 0, num_bytes = 0;
+    
     while (!complete) {
         if (U1STAbits.URXDA) {
             data = U1RXREG;
@@ -101,16 +102,15 @@ int main() {
     RTCCSetup(); // Initialize the Real Time Clock and Calendar
     
     init_sevenseg(); // Flashes numbers on 7 seg
-    
-    RPB3Rbits.RPB3R = 0b0001;
-    //U1RXRbits.U1RXR = 0b0100;
+  
+    RPB3Rbits.RPB3R = 0b0001; // pin B3 set to TX
+    U1RXRbits.U1RXR = 0b0100; // pin B2 set to RX
     U1MODEbits.BRGH = 0;
-    U1BRG = ((30000000 / 9600) / 8) - 1;
-    //U1BRG = (48000000 / (16 * 9600)) - 1;
-    U1MODEbits.PDSEL = 0b00;
-    U1MODEbits.STSEL = 0;
+    U1BRG = ((30000000 / 9600) / 8) - 1; // baud rate
+    U1MODEbits.PDSEL = 0b00; // parity bits (0 = 8 bit, no parity)
+    U1MODEbits.STSEL = 0; // stop bits (0 = 1 stop bit)
     U1STAbits.UTXEN = 1;
-    //U1STAbits.URXEN = 1;
+    U1STAbits.URXEN = 1;
     U1MODEbits.ON = 1;
    
     
@@ -120,17 +120,20 @@ int main() {
     char message[100];
     int i = 0;
     int j = 0;
+    sprintf(message, "test");
     while(1) {
         
-        sprintf(message, "test");
         write_uart(message);
-        //read_uart(message, 100);
+        
         i++;
         
         j = 0;
-        while (j < 3000000) {
+        while (j < 5000000) {
             j++;
         }
+        read_uart(message, 100);
+
+        
         
         switch (status) {
             case 0: // time since start

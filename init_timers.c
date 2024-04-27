@@ -55,6 +55,7 @@ void RTCCSetup () {
 // Initializes pins and interrupts
 void PINSetup() {
     ANSELBbits.ANSB3 = 0; // RB3 is digital (LED))
+    ANSELBbits.ANSB2 = 0; // RB2 is digital (UART TX)
     ANSELBbits.ANSB12 = 0; // RB12 is digital (Shift input, digits)
     ANSELBbits.ANSB13 = 0; // RB13 is digital (Shift clock, digits)
     ANSELBbits.ANSB14 = 0; // RB14 is digital (Shift input, indiv LEDs)
