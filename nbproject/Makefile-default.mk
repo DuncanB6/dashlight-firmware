@@ -51,17 +51,17 @@ OBJECTDIR=build/${CND_CONF}/${IMAGE_TYPE}
 DISTDIR=dist/${CND_CONF}/${IMAGE_TYPE}
 
 # Source Files Quoted if spaced
-SOURCEFILES_QUOTED_IF_SPACED=sevenSegment.c rtcc.c main.c init_timers.c
+SOURCEFILES_QUOTED_IF_SPACED=sevenSegment.c rtcc.c main.c init_timers.c carInterface.c
 
 # Object Files Quoted if spaced
-OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/sevenSegment.o ${OBJECTDIR}/rtcc.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init_timers.o
-POSSIBLE_DEPFILES=${OBJECTDIR}/sevenSegment.o.d ${OBJECTDIR}/rtcc.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/init_timers.o.d
+OBJECTFILES_QUOTED_IF_SPACED=${OBJECTDIR}/sevenSegment.o ${OBJECTDIR}/rtcc.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init_timers.o ${OBJECTDIR}/carInterface.o
+POSSIBLE_DEPFILES=${OBJECTDIR}/sevenSegment.o.d ${OBJECTDIR}/rtcc.o.d ${OBJECTDIR}/main.o.d ${OBJECTDIR}/init_timers.o.d ${OBJECTDIR}/carInterface.o.d
 
 # Object Files
-OBJECTFILES=${OBJECTDIR}/sevenSegment.o ${OBJECTDIR}/rtcc.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init_timers.o
+OBJECTFILES=${OBJECTDIR}/sevenSegment.o ${OBJECTDIR}/rtcc.o ${OBJECTDIR}/main.o ${OBJECTDIR}/init_timers.o ${OBJECTDIR}/carInterface.o
 
 # Source Files
-SOURCEFILES=sevenSegment.c rtcc.c main.c init_timers.c
+SOURCEFILES=sevenSegment.c rtcc.c main.c init_timers.c carInterface.c
 
 
 
@@ -125,6 +125,12 @@ ${OBJECTDIR}/init_timers.o: init_timers.c  .generated_files/flags/default/59f1aa
 	@${RM} ${OBJECTDIR}/init_timers.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/init_timers.o.d" -o ${OBJECTDIR}/init_timers.o init_timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
+${OBJECTDIR}/carInterface.o: carInterface.c  .generated_files/flags/default/940a0f4acfc229b5b378dd4039025140799f0b9f .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/carInterface.o.d 
+	@${RM} ${OBJECTDIR}/carInterface.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE) -g -D__DEBUG   -fframe-base-loclist  -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/carInterface.o.d" -o ${OBJECTDIR}/carInterface.o carInterface.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
 else
 ${OBJECTDIR}/sevenSegment.o: sevenSegment.c  .generated_files/flags/default/58da1f2aeb526e6cfb4bd7c69774345a9c1dab9b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
 	@${MKDIR} "${OBJECTDIR}" 
@@ -149,6 +155,12 @@ ${OBJECTDIR}/init_timers.o: init_timers.c  .generated_files/flags/default/b4d3c3
 	@${RM} ${OBJECTDIR}/init_timers.o.d 
 	@${RM} ${OBJECTDIR}/init_timers.o 
 	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/init_timers.o.d" -o ${OBJECTDIR}/init_timers.o init_timers.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
+	
+${OBJECTDIR}/carInterface.o: carInterface.c  .generated_files/flags/default/dd2e9aa85162967c80e4af5e54aff22f86df49b .generated_files/flags/default/da39a3ee5e6b4b0d3255bfef95601890afd80709
+	@${MKDIR} "${OBJECTDIR}" 
+	@${RM} ${OBJECTDIR}/carInterface.o.d 
+	@${RM} ${OBJECTDIR}/carInterface.o 
+	${MP_CC}  $(MP_EXTRA_CC_PRE)  -g -x c -c -mprocessor=$(MP_PROCESSOR_OPTION)  -fno-common -MP -MMD -MF "${OBJECTDIR}/carInterface.o.d" -o ${OBJECTDIR}/carInterface.o carInterface.c    -DXPRJ_default=$(CND_CONF)    $(COMPARISON_BUILD)  -mdfp="${DFP_DIR}"  
 	
 endif
 

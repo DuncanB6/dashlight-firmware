@@ -18,6 +18,7 @@
 #include "rtcc.h"
 #include "init_timers.h"
 #include "sevenSegment.h"
+#include "carInterface.h"
 
 #endif
 
@@ -61,38 +62,6 @@ void __ISR(_CORE_TIMER_VECTOR, IPL6SOFT) CoreTimerISR(void) {
     _CP0_SET_COMPARE(CORE_TICKS); // Watches core count until next interrupt
 }
 
-void write_uart(char * string) {
-    while (*string != '\0') {
-            while (U1STAbits.UTXBF) {
-                ;
-            }
-            U1TXREG = *string;
-            ++string;
-        }
-}
-
-void read_uart(char * message, int maxLength) {
-    char data = 0;
-    int complete = 0, num_bytes = 0;
-    
-    while (!complete) {
-        if (U1STAbits.URXDA) {
-            data = U1RXREG;
-            if ((data == '\n') || (data == '\r')) {
-                complete = 1;
-            }
-            else {
-                message[num_bytes] = data;
-                ++num_bytes;
-                if (num_bytes >= maxLength) {
-                    num_bytes = 0;
-                }
-            }
-        }
-    }
-    message[num_bytes] = '\0';
-}
-
 int main() {
     
     PINSetup(); // Initializes pins, interrupts, RTCC
@@ -101,39 +70,16 @@ int main() {
     
     RTCCSetup(); // Initialize the Real Time Clock and Calendar
     
-    init_sevenseg(); // Flashes numbers on 7 seg
-  
-    RPB3Rbits.RPB3R = 0b0001; // pin B3 set to TX
-    U1RXRbits.U1RXR = 0b0100; // pin B2 set to RX
-    U1MODEbits.BRGH = 0;
-    U1BRG = ((30000000 / 9600) / 8) - 1; // baud rate
-    U1MODEbits.PDSEL = 0b00; // parity bits (0 = 8 bit, no parity)
-    U1MODEbits.STSEL = 0; // stop bits (0 = 1 stop bit)
-    U1STAbits.UTXEN = 1;
-    U1STAbits.URXEN = 1;
-    U1MODEbits.ON = 1;
-   
+    UARTSetup();
     
+    init_sevenseg(); // Flashes numbers on 7 seg
+    
+    initialize_car_connection();
+  
     struct rtccTime time;
     uint16_t formatted_time;
     int status = 0;
-    char message[100];
-    int i = 0;
-    int j = 0;
-    sprintf(message, "test");
     while(1) {
-        
-        write_uart(message);
-        
-        i++;
-        
-        j = 0;
-        while (j < 5000000) {
-            j++;
-        }
-        read_uart(message, 100);
-
-        
         
         switch (status) {
             case 0: // time since start
