@@ -74,11 +74,20 @@ int main() {
     
     init_sevenseg(); // Flashes numbers on 7 seg
     
-    initialize_car_connection();
-  
     struct rtccTime time;
     uint16_t formatted_time;
     int status = 0;
+    char message[100];
+    int integer_data[2];
+    
+    int rpm;
+    
+    // initialize the car connection
+    sprintf(message, "atz");
+    send_car_command(message, integer_data);
+    sprintf(message, "atsp0");
+    send_car_command(message, integer_data);
+    
     while(1) {
         
         switch (status) {
@@ -93,6 +102,16 @@ int main() {
                 if (!update_digs(formatted_time)) {
                     init_sevenseg();
                 }
+                break;
+            case 1: // get RPM
+                sprintf(message, "010C");
+                send_car_command(message, integer_data);
+                rpm = (256 * integer_data[0] + integer_data[1]) / 4;
+                
+                // debug
+                sprintf(message, "RPM: %d", rpm);
+                send_car_command(message, integer_data);
+                break;
         }
      
     }

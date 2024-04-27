@@ -4,5 +4,5 @@
 
 #endif
 
-extern void initialize_car_connection(void);
+extern void send_car_command(char *message, int *integer_data);
 extern void UARTSetup(void);

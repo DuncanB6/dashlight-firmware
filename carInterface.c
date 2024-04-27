@@ -64,36 +64,40 @@ void read_uart(char * message, int maxLength) {
     message[num_bytes] = '\0';
 }
 
-void initialize_car_connection(void) {
+void send_car_command(char *message, int *integer_data) {
     
-    int i = 0;
-    int j = 0;
-    char message[100];
-    char returned[100];
+    char returned[100] = {0}; // set to 0, otherwise picks up garbage
+    char buff[100] = {0}; // set to 0, otherwise picks up garbage
+    char *data = "";
+    int data_count;
+    char *garbage_characters;
     
-    sprintf(message, "atz");
-    while (strstr(returned, "ELM327 v1.4b") == NULL){
+    while (strlen(returned) <= 1){
         write_uart(message);
-        delay(1000);
         read_uart(returned, 100);
     }
-    
-    while (strchr(returned, '>') == NULL) {
-        read_uart(returned, 100);
+    write_uart(" Received 1 "); // debug
+     
+    while (strchr(buff, '>') == NULL) {
+        read_uart(buff, 100);
     }
+    write_uart(" Received 2 "); // debug
     
-    sprintf(message, "atsp0");
-    while (strstr(returned, "OK") == NULL){
-        write_uart(message);
-        delay(1000);
-        read_uart(returned, 100);
-    }
+    data = strtok(returned, " ");
     
-    while (strchr(returned, '>') == NULL) {
-        read_uart(returned, 100);
-    }
-    
-    return;
+    data_count = 0;
+    while (data != NULL) {
+        data_count++;
+        // do nothing with the first two arguments of the returned data
+        if (data_count <= 2) {
+            data = strtok(NULL, " ");
+            continue;
+        }
 
+        integer_data[data_count - 3] = strtol(data, &garbage_characters, 16);
+        data = strtok(NULL, " ");
+    }
+      
+    return;
 }
     
