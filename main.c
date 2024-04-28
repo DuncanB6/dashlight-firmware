@@ -76,17 +76,20 @@ int main() {
     
     struct rtccTime time;
     uint16_t formatted_time;
-    int status = 0;
+    int status = 1;
     char message[100];
-    int integer_data[2];
+    int integer_data[2] = {0};
     
-    int rpm;
+    int rpm = 0;
     
     // initialize the car connection
-    sprintf(message, "atz");
+    sprintf(message, "atz\r");
     send_car_command(message, integer_data);
-    sprintf(message, "atsp0");
+    delay(1000000);
+    sprintf(message, "atsp0\r");
     send_car_command(message, integer_data);
+    
+    int i = 1;
     
     while(1) {
         
@@ -104,13 +107,19 @@ int main() {
                 }
                 break;
             case 1: // get RPM
-                sprintf(message, "010C");
+                sprintf(message, "010C\r");
                 send_car_command(message, integer_data);
                 rpm = (256 * integer_data[0] + integer_data[1]) / 4;
+                rpm = rpm + i;
+                update_digs(rpm);
+                i++;
                 
+                delay(100000);
+
                 // debug
-                sprintf(message, "RPM: %d", rpm);
-                send_car_command(message, integer_data);
+                //sprintf(message, "RPM: %d", rpm);
+                //send_car_command(message, integer_data);
+                
                 break;
         }
      

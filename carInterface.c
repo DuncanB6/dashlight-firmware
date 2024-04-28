@@ -45,8 +45,18 @@ void write_uart(char * string) {
 void read_uart(char * message, int maxLength) {
     char data = 0;
     int complete = 0, num_bytes = 0;
+    int timeout = 0;
     
     while (!complete) {
+        timeout++;
+        if (timeout > 2500000) {
+            message[0] = 't';
+            message[1] = 'i';
+            message[2] = 'm';
+            message[3] = '\0';
+            return;
+        }
+        
         if (U1STAbits.URXDA) {
             data = U1RXREG;
             if ((data == '\n') || (data == '\r')) {
@@ -61,28 +71,33 @@ void read_uart(char * message, int maxLength) {
             }
         }
     }
+    
     message[num_bytes] = '\0';
+ 
 }
 
 void send_car_command(char *message, int *integer_data) {
     
     char returned[100] = {0}; // set to 0, otherwise picks up garbage
+    char echo[100] = {0}; // set to 0, otherwise picks up garbage
     char buff[100] = {0}; // set to 0, otherwise picks up garbage
     char *data = "";
     int data_count;
     char *garbage_characters;
-    
-    while (strlen(returned) <= 1){
+
+    while (strlen(echo) <= 1){
         write_uart(message);
+        read_uart(echo, 100);
+    }
+
+    while (strlen(returned) <= 1){
         read_uart(returned, 100);
     }
-    write_uart(" Received 1 "); // debug
      
-    while (strchr(buff, '>') == NULL) {
-        read_uart(buff, 100);
-    }
-    write_uart(" Received 2 "); // debug
-    
+    //while (strchr(buff, '>') == NULL) {
+    //    read_uart(buff, 100);
+    //}
+
     data = strtok(returned, " ");
     
     data_count = 0;
