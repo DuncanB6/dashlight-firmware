@@ -42,7 +42,7 @@ void write_uart(char * string) {
         }
 }
 
-void read_uart(char * message, int maxLength) {
+void read_uart(char *message, int maxLength) {
     char data = 0;
     int complete = 0, num_bytes = 0;
     int timeout = 0;
@@ -71,7 +71,7 @@ void read_uart(char * message, int maxLength) {
             }
         }
     }
-    
+
     message[num_bytes] = '\0';
  
 }
@@ -84,35 +84,38 @@ void send_car_command(char *message, int *integer_data) {
     char *data = "";
     int data_count;
     char *garbage_characters;
-
-    while (strlen(echo) <= 1){
-        write_uart(message);
-        read_uart(echo, 100);
-    }
-
-    while (strlen(returned) <= 1){
-        read_uart(returned, 100);
-    }
-     
-    //while (strchr(buff, '>') == NULL) {
-    //    read_uart(buff, 100);
-    //}
-
-    data = strtok(returned, " ");
     
-    data_count = 0;
-    while (data != NULL) {
-        data_count++;
-        // do nothing with the first two arguments of the returned data
-        if (data_count <= 2) {
-            data = strtok(NULL, " ");
-            continue;
-        }
+    write_uart(message);
+    read_uart(echo, 100);
+    read_uart(returned, 100);
+    integer_data[0] = ((strtol(&returned[6],0,16)*256)+strtol(&returned[9],0,16))/4;
+    read_uart(echo, 100);
+    read_uart(echo, 100);
+    return;
+    
+    while (U1STAbits.URXDA) {
+        
+        returned[0] = '\0';
 
-        integer_data[data_count - 3] = strtol(data, &garbage_characters, 16);
-        data = strtok(NULL, " ");
+        read_uart(returned, 100);
+
+        data = strtok(returned, " ");
+
+        data_count = 0;
+        while (data != NULL) {
+            data_count++;
+            // do nothing with the first two arguments of the returned data
+            if (data_count <= 2) {
+                data = strtok(NULL, " ");
+                continue;
+            }
+
+            integer_data[data_count - 3] = strtol(data, &garbage_characters, 16);
+            data = strtok(NULL, " ");
+            
+        }
     }
-      
+ 
     return;
 }
     

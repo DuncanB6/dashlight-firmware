@@ -70,24 +70,25 @@ int main() {
     
     RTCCSetup(); // Initialize the Real Time Clock and Calendar
     
-    UARTSetup();
+    //UARTSetup();
     
     init_sevenseg(); // Flashes numbers on 7 seg
     
     struct rtccTime time;
     uint16_t formatted_time;
-    int status = 1;
+    int status = 0;
     char message[100];
     int integer_data[2] = {0};
     
     int rpm = 0;
     
     // initialize the car connection
-    sprintf(message, "atz\r");
-    send_car_command(message, integer_data);
-    delay(1000000);
-    sprintf(message, "atsp0\r");
-    send_car_command(message, integer_data);
+    //sprintf(message, "atz\r");
+    //send_car_command(message, integer_data);
+    //delay(1000000);
+    //sprintf(message, "atsp0\r");
+    //send_car_command(message, integer_data);
+    //delay(1000000);
     
     int i = 1;
     
@@ -111,10 +112,10 @@ int main() {
                 send_car_command(message, integer_data);
                 rpm = (256 * integer_data[0] + integer_data[1]) / 4;
                 rpm = rpm + i;
-                update_digs(rpm);
+                update_digs(integer_data[0]);
                 i++;
                 
-                delay(100000);
+                delay(10000000);
 
                 // debug
                 //sprintf(message, "RPM: %d", rpm);
