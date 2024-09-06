@@ -2,7 +2,7 @@
 /*
  * Duncan Boyd, Feb 10, 2024, duncan@wapta.ca
  * Purpose: Run a uc that can show some interesting metrics in my car through a
- * 7 segment display.
+ *          7 segment display.
  */
 
 #ifndef _main_C_
@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <sys/attribs.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "CONFIG.h"
 #include "rtcc.h"
@@ -23,14 +24,9 @@
 #endif
 
 void delay(int time) {
-    /*
-    * Provides a delay by occupying the uc
-    */
-    int i;
-    for (i = 0; i < time; i += 1);
+    for (int i = 0; i < time; i += 1);
 }
 
-// ISR that triggers every 1 second
 void __ISR(_CORE_TIMER_VECTOR, IPL6SOFT) CoreTimerISR(void) {
     //Core ISR that updates the 7 segment display using global variables
     
@@ -56,45 +52,83 @@ void __ISR(_CORE_TIMER_VECTOR, IPL6SOFT) CoreTimerISR(void) {
     LATBbits.LATB13 = 0;
        
     // i goes up to 4 to stagger the digit this function leaves off when it ends
-    write_dig(digs[digit_index], digit_index%3); 
+    write_dig(digs[digit_index]); 
         
     _CP0_SET_COUNT(0); // Set core count to 0
     _CP0_SET_COMPARE(CORE_TICKS); // Watches core count until next interrupt
 }
 
+int sample_adc(void) {
+        
+    AD1CON1bits.ADON = 1; // turn on ADC
+    AD1CHSbits.CH0SA0 = 0; // select pin AN0
+    AD1CON1bits.SAMP = 1; // start sampling
+    
+    for (int i = 0; i < 100; i++); // collect analog data for a bit
+    
+    AD1CON1bits.SAMP = 0;
+    
+    while (!AD1CON1bits.DONE);
+    
+    return ADC1BUF0;
+}
+
+int check_engine_status(void) {
+    
+    char message[100];
+    int integer_data[4] = {0};
+    
+    sprintf(message, "010C\r");
+    retrieve_data(message, integer_data);
+    
+    // confirm that we can receive data
+    if (integer_data[0] != 65 || integer_data[1] != 12) {
+        return 0;
+    }
+   
+    return 1;
+}
+
 int main() {
     
-    PINSetup(); // Initializes pins, interrupts, RTCC
+    PINSetup(); // initializes pins
     
-    ISRSetup(); // Initialize ISR for the 7 seg updates
+    ISRSetup(); // initialize ISR for the 7 seg updates
     
-    RTCCSetup(); // Initialize the Real Time Clock and Calendar
+    flash_seven_seg(); // flashes numbers on 7 seg
     
-    //UARTSetup();
+    RTCCSetup(); // initialize the Real Time Clock and Calendar
     
-    init_sevenseg(); // Flashes numbers on 7 seg
-    
+    //UARTSetup(); // initialize the UART connection with the car
+        
     struct rtccTime time;
-    uint16_t formatted_time;
+    int formatted_time;
     int status = 0;
     char message[100];
-    int integer_data[2] = {0};
-    
+    int integer_data[4];
     int rpm = 0;
-    
-    // initialize the car connection
-    //sprintf(message, "atz\r");
-    //send_car_command(message, integer_data);
-    //delay(1000000);
-    //sprintf(message, "atsp0\r");
-    //send_car_command(message, integer_data);
-    //delay(1000000);
-    
-    int i = 1;
-    
+    int speed = 0;
+    int temperature = 40;
+    int maf = 0;
+    int mpg = 0;
+        
     while(1) {
         
+        status = 4 - (sample_adc() / 205); // range is 0-1023, assumes 5 settings
+        
+        if (status != 0) {
+            if (!check_engine_status()) {
+                // set screen to '----' while searching
+                for (int i = 0; i < 4; i++) {
+                    digs[i] = convert_to_bin('-', 0);
+                }
+                UARTSetup();
+                continue;
+            }
+        }
+        
         switch (status) {
+            
             case 0: // time since start
                 time = read_rtcc();
                 if (time.hr01 != 0) {
@@ -103,25 +137,67 @@ int main() {
                 else {
                     formatted_time = time.min10*1000 + time.min01*100 + time.sec10*10 + time.sec01;
                 }
-                if (!update_digs(formatted_time)) {
-                    init_sevenseg();
-                }
+                
+                update_digs(formatted_time, 1);
+                
                 break;
+                
             case 1: // get RPM
                 sprintf(message, "010C\r");
-                send_car_command(message, integer_data);
-                rpm = (256 * integer_data[0] + integer_data[1]) / 4;
-                rpm = rpm + i;
-                update_digs(integer_data[0]);
-                i++;
+                retrieve_data(message, integer_data);
                 
-                delay(10000000);
+                rpm = (256 * integer_data[2] + integer_data[3]) / 4;
+                
+                update_digs(rpm, 0);
 
-                // debug
-                //sprintf(message, "RPM: %d", rpm);
-                //send_car_command(message, integer_data);
-                
                 break;
+                
+            case 2: // intake air temp
+                sprintf(message, "010F\r");
+                retrieve_data(message, integer_data);
+                
+                temperature = integer_data[2] - 40;
+                
+                update_digs(temperature, 0);
+
+                break;
+                
+            case 3: // speed
+                sprintf(message, "010D\r");
+                retrieve_data(message, integer_data);
+                
+                speed = integer_data[2];
+                
+                update_digs(speed, 0);
+
+                break;
+                
+            case 4: // mpg
+                sprintf(message, "010D\r");
+                retrieve_data(message, integer_data);
+                
+                speed = integer_data[2];
+                
+                sprintf(message, "0110\r");
+                retrieve_data(message, integer_data);
+                
+                maf = (256 * integer_data[2] + integer_data[3]) / 100;
+                
+                // protects against divide by 0 
+                if (maf == 0) {
+                    break;
+                }
+                
+                mpg = speed * 7.718 / maf; // source: https://stackoverflow.com/questions/17170646/what-is-the-best-way-to-get-fuel-consumption-mpg-using-obd2-parameters
+                
+                update_digs(mpg, 0);
+
+                break;
+        }
+        
+        // add a delay unless we're on clock mode
+        if (status != 0) {
+            delay(1000);
         }
      
     }

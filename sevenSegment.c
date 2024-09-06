@@ -20,10 +20,10 @@
 #endif
 
 // For 7 seg interrupt
-char digs[] = {7, 8, 3, 2}; // Digits to be written to 7 seg
+uint8_t digs[4]; // Digits to be written to 7 seg
 int digit_index = 0; // Index for 7 seg digit, cycles through digits
 
-void write_dig(int dig, int center) {
+uint8_t convert_to_bin(char dig, int colon_on) {
     /*
     * Writes a single digit to the 7 segment by shifting it into registers
     * Consumes:
@@ -31,46 +31,63 @@ void write_dig(int dig, int center) {
     *  - center: boolean flag to indicate if colon light should be on
     */
     
-    int bdig = 0b00000000; // Variable for containing all LEDs in binary form
+    int bdig; // Variable for containing all LEDs in binary form
     
     // Checks which digit has been given and assigns appropriate binary list
     switch (dig) {
-        case 0:
+        case '0':
             bdig = 0b00000011;
             break;
-        case 1:
+        case '1':
             bdig = 0b10011111;
             break;
-        case 2:
+        case '2':
             bdig = 0b00100101;
             break;
-        case 3:
+        case '3':
             bdig = 0b00001101;
             break;
-        case 4:
+        case '4':
             bdig = 0b10011001;
             break;
-        case 5:
+        case '5':
             bdig = 0b01001001;
             break;
-        case 6:
+        case '6':
             bdig = 0b01000001;
             break;
-        case 7:
+        case '7':
             bdig = 0b00011111;
             break;    
-        case 8:
+        case '8':
             bdig = 0b00000001;
             break;  
-        case 9:
+        case '9':
             bdig = 0b00011001;
+            break;
+        case '-':
+            bdig = 0b11111101;
+            break;
+        case ' ':
+            bdig = 0b11111111;
             break;
     }
     
     // Turns on colon light for middle digits
-    if (center) {
+    if (colon_on) {
         bdig--; // changes trailing 1 to 0
     }
+    
+    return bdig;
+}
+
+void write_dig(int bdig) {
+    /*
+    * Writes a single digit to the 7 segment by shifting it into registers
+    * Consumes:
+    *  - dig: digit to write to 7 segment
+    *  - center: boolean flag to indicate if colon light should be on
+    */
     
     int led_bin = 0; // Individual LED values
     
@@ -92,77 +109,45 @@ void write_dig(int dig, int center) {
     return;
 }
 
-int update_digs(int number) {
-    /*
-     Updates the readout on the 7 segment display
-     Consumes:
-        - number: a 4 digit number that will be displayed on 7 segment
-     Returns:
-        - an integer that confirms success, returns 0 on failure
-     */
+void update_digs(int number, int colon_on) { 
+
+    char temp[5];
+    char number_str[] = "    "; // 4 spaces
+    int start_pos;
     
-    if (number < 0 || number > 9999) {
-        return 0;
+    if (number < 0) {
+        snprintf(temp, sizeof(temp), "-%d", abs(number));
+    } else {
+        snprintf(temp, sizeof(temp), "%d", number);
     }
+    
+    start_pos = strlen(number_str) - strlen(temp);
+    strncpy(number_str + start_pos, temp, strlen(temp));
     
     for (int i = 0; i < 4; i++) {
-        if (number > 0) {
-            digs[i] = number%10;
-            number = number/10;
+        // if colon requested, apply it to middle two positions
+        if (i == 1 || i == 2) {
+            digs[3 - i] = convert_to_bin(number_str[i], colon_on);
         }
         else {
-            digs[i] = 0;
+            digs[3 - i] = convert_to_bin(number_str[i], 0);
         }
+        
     }
     
-    return 1;
+    return;
 }
 
-void init_sevenseg() {
-    /*
-     Flashes numbers to 7 segment for aesthetic purposes
-    */
+void flash_seven_seg() {
+    
+    char number_str[] = "123456789-";
+
     for (int i = 0; i < 10; i++) {
         for (int j = 0; j < 4; j++) {
-            digs[j] = i;
+            digs[j] = convert_to_bin(number_str[i], 0);
         }
         delay(750000);
     }
-    
 }
-/*
-// ISR that triggers every 1 second
-void __ISR(_CORE_TIMER_VECTOR, IPL6SOFT) CoreTimerISR(void) {
-    //Core ISR that updates the 7 segment display using global variables
-    
-    
-    IFS0bits.CTIF = 0; // Clears CT interrupt flag
-    
-    // Cycles through index range
-    digit_index++;
-    if (digit_index >= 4) {
-        digit_index = 0;
-    }
-    
-    // Shifts one extra digit, as it's unused
-    if (digit_index == 0) {
-        LATBbits.LATB12 = 1;
-    }
-    else {
-        LATBbits.LATB12 = 0;
-    }
-
-    // Enter bit with clock
-    LATBbits.LATB13 = 1;
-    LATBbits.LATB13 = 0;
-       
-    // i goes up to 4 to stagger the digit this function leaves off when it ends
-    write_dig(digs[digit_index], digit_index%3); 
-        
-    _CP0_SET_COUNT(0); // Set core count to 0
-    _CP0_SET_COMPARE(CORE_TICKS); // Watches core count until next interrupt
-}
-*/
-
 
 

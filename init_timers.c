@@ -60,10 +60,12 @@ void PINSetup() {
     ANSELBbits.ANSB13 = 0; // RB13 is digital (Shift clock, digits)
     ANSELBbits.ANSB14 = 0; // RB14 is digital (Shift input, indiv LEDs)
     ANSELBbits.ANSB15 = 0; // RB15 is digital (Shift clock, indiv LEDs)
+    ANSELAbits.ANSA0 = 1; // AN0 is analog (potentiometer)
     TRISBbits.TRISB3 = 0; // RB3 is output (LED)
     TRISBbits.TRISB12 = 0; // RB12 is output (Shift input, digits)
     TRISBbits.TRISB13 = 0; // RB13 is output (Shift clock, digits)
     TRISBbits.TRISB14 = 0; // RB14 is output (Shift input, indiv LEDs)
     TRISBbits.TRISB15 = 0; // RB15 is output (Shift clock, indiv LEDs)
+    TRISAbits.TRISA0 = 1; // AN0 is an input (potentiometer)
 }
 
