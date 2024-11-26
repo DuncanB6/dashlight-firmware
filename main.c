@@ -1,8 +1,9 @@
 
 /*
  * Duncan Boyd, Feb 10, 2024, duncan@wapta.ca
- * Purpose: Run a uc that can show some interesting metrics in my car through a
- *          7 segment display.
+ * 
+ * Displays metrics on a 7 segment display using data pulled from a Sparkfun 
+ * OBD2 board using UART. Toggles between modes using a potentiometer.
  */
 
 #ifndef _main_C_
@@ -24,16 +25,17 @@
 #endif
 
 void delay(int time) {
+    // delays by occupying the uC
+    
     for (int i = 0; i < time; i += 1);
 }
 
 void __ISR(_CORE_TIMER_VECTOR, IPL6SOFT) CoreTimerISR(void) {
-    //Core ISR that updates the 7 segment display using global variables
+    // core ISR that updates the 7 segment display using global variables
     
+    IFS0bits.CTIF = 0; // clears CT interrupt flag
     
-    IFS0bits.CTIF = 0; // Clears CT interrupt flag
-    
-    // Cycles through index range
+    // increments to the next digit, or rolls back after 4th digit
     digit_index++;
     if (digit_index >= 4) {
         digit_index = 0;
@@ -78,7 +80,7 @@ int check_engine_status(void) {
     char message[100];
     int integer_data[4] = {0};
     
-    sprintf(message, "010C\r");
+    sprintf(message, "010C\r"); // request RPM
     retrieve_data(message, integer_data);
     
     // confirm that we can receive data
@@ -99,7 +101,7 @@ int main() {
     
     RTCCSetup(); // initialize the Real Time Clock and Calendar
     
-    //UARTSetup(); // initialize the UART connection with the car
+    UARTSetup(); // initialize the UART connection with the car
         
     struct rtccTime time;
     int formatted_time;
@@ -116,6 +118,7 @@ int main() {
         
         status = 4 - (sample_adc() / 205); // range is 0-1023, assumes 5 settings
         
+        // connect to the OBD2-UART board
         if (status != 0) {
             if (!check_engine_status()) {
                 // set screen to '----' while searching
@@ -142,7 +145,7 @@ int main() {
                 
                 break;
                 
-            case 1: // get RPM
+            case 1: // RPM
                 sprintf(message, "010C\r");
                 retrieve_data(message, integer_data);
                 
@@ -175,12 +178,10 @@ int main() {
             case 4: // mpg
                 sprintf(message, "010D\r");
                 retrieve_data(message, integer_data);
-                
                 speed = integer_data[2];
                 
                 sprintf(message, "0110\r");
                 retrieve_data(message, integer_data);
-                
                 maf = (256 * integer_data[2] + integer_data[3]) / 100;
                 
                 // protects against divide by 0 

@@ -14,8 +14,6 @@
 #include <sys/attribs.h>
 #include <stdlib.h>
 
-//#include "main.h"
-//#include "sevenSegment.h"
 #include "init_timers.h"
 
 #endif
