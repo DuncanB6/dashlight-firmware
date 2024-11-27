@@ -2,9 +2,12 @@
 
 This repository includes files used in the design and development of firmware for the Dashlight project. Find information about the hardware side of the project at https://github.com/DuncanB6/dashlight-hardware.
 
+Although most files and build information is available, trying to reproduce this project without modification is not advised. Differences in your car (either hardware or software) could easily cause headaches. This was built for a 2002 Mazda Protege5.
+
 ## Overview
 
-<img src="media/in_car.jpg" alt="Schematic" width="300"/>
+<img src="media/in_car.jpg" alt="Schematic" width="355"/>
+<img src="media/entire_design.jpg" alt="Schematic" width="200"/>
 
 The objective of this project is to provide a display for my car (The Yellow Peril) that displays some data while driving. 
 
